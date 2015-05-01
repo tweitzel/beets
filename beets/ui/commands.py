@@ -1157,29 +1157,20 @@ def update_items(lib, query, album, move, pretend):
                 album.move()
 
 
-def update_func(lib, opts, args):
-    update_items(lib, decargs(args), opts.album, ui.should_move(opts.move),
-                 opts.pretend)
+# TODO: add 'up' and 'upd' aliases
+@click.command('update', short_help='update the library')
+@ui.album_option
+@ui.format_option()
+@click.option('move', '-M', '--nomove', is_flag=True, default=True,
+              help="don't move files in library")
+@click.option('-p', '--pretend', is_flag=True,
+              help='show all changes but do nothing')
+@click.argument('query', nargs=-1)
+@ui.pass_context
+def update_cmd(ctx, query, album, move, pretend):
+    update_items(ctx.lib, query, album, move, pretend)
 
 
-update_cmd = ui.Subcommand(
-    u'update', help=u'update the library', aliases=(u'upd', u'up',)
-)
-update_cmd.parser.add_album_option()
-update_cmd.parser.add_format_option()
-update_cmd.parser.add_option(
-    u'-m', u'--move', action='store_true', dest='move',
-    help=u"move files in the library directory"
-)
-update_cmd.parser.add_option(
-    u'-M', u'--nomove', action='store_false', dest='move',
-    help=u"don't move files in library"
-)
-update_cmd.parser.add_option(
-    u'-p', u'--pretend', action='store_true',
-    help=u"show all changes but do nothing"
-)
-update_cmd.func = update_func
 default_commands.append(update_cmd)
 
 
@@ -1217,19 +1208,17 @@ def remove_items(lib, query, album, delete):
             obj.remove(delete)
 
 
-def remove_func(lib, opts, args):
-    remove_items(lib, decargs(args), opts.album, opts.delete)
+# TODO: add 'rm' alias
+@click.command('remove', short_help='remove matching items from the library')
+@click.option('-d', '--delete', is_flag=True,
+              help='also remove files from disk')
+@ui.album_option
+@click.argument('query', nargs=-1)
+@ui.pass_context
+def remove_cmd(ctx, query, album, delete):
+    remove_items(ctx.lib, query, album, delete)
 
 
-remove_cmd = ui.Subcommand(
-    u'remove', help=u'remove matching items from the library', aliases=(u'rm',)
-)
-remove_cmd.parser.add_option(
-    u"-d", u"--delete", action="store_true",
-    help=u"also remove files from disk"
-)
-remove_cmd.parser.add_album_option()
-remove_cmd.func = remove_func
 default_commands.append(remove_cmd)
 
 
@@ -1397,40 +1386,28 @@ def modify_parse_args(args):
     return query, mods, dels
 
 
-def modify_func(lib, opts, args):
-    query, mods, dels = modify_parse_args(decargs(args))
+# TODO: add 'mod' alias
+@click.command('modify', short_help='change metadata fields')
+@click.option('move', '-M', '--nomove', is_flag=True, default=True,
+              help="don't move files in library")
+@click.option('write', '-w', '--write', flag_value=True,
+              help="write new metadata to files' tags (default)")
+@click.option('write', '-W', '--nowrite', flag_value=False, default=None,
+              help="don't write metadata (opposite of -w)")
+@ui.album_option
+@ui.format_option(target='item')
+@click.option('-y', '--yes', is_flag=True, help='skip_confirmation')
+@click.argument('query', nargs=-1)
+@ui.pass_context
+def modify_cmd(ctx, query, write, move, album, yes):
+    query, mods, dels = modify_parse_args(query)
     if not mods and not dels:
-        raise ui.UserError(u'no modifications specified')
-    modify_items(lib, mods, dels, query, ui.should_write(opts.write),
-                 ui.should_move(opts.move), opts.album, not opts.yes)
+        raise ui.UserError('no modifications specified')
+    write = write if write is not None else \
+        config['import']['write'].get(bool)
+    modify_items(ctx.lib, mods, dels, query, write, move, album, not yes)
 
 
-modify_cmd = ui.Subcommand(
-    u'modify', help=u'change metadata fields', aliases=(u'mod',)
-)
-modify_cmd.parser.add_option(
-    u'-m', u'--move', action='store_true', dest='move',
-    help=u"move files in the library directory"
-)
-modify_cmd.parser.add_option(
-    u'-M', u'--nomove', action='store_false', dest='move',
-    help=u"don't move files in library"
-)
-modify_cmd.parser.add_option(
-    u'-w', u'--write', action='store_true', default=None,
-    help=u"write new metadata to files' tags (default)"
-)
-modify_cmd.parser.add_option(
-    u'-W', u'--nowrite', action='store_false', dest='write',
-    help=u"don't write metadata (opposite of -w)"
-)
-modify_cmd.parser.add_album_option()
-modify_cmd.parser.add_format_option(target='item')
-modify_cmd.parser.add_option(
-    u'-y', u'--yes', action='store_true',
-    help=u'skip confirmation'
-)
-modify_cmd.func = modify_func
 default_commands.append(modify_cmd)
 
 
