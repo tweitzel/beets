@@ -27,7 +27,8 @@ from itertools import chain
 
 import beets
 from beets import ui
-from beets.ui import ClickSubcommand, print_, input_, decargs, show_path_changes
+from beets.ui import ClickSubcommand, print_, input_, decargs, \
+    show_path_changes
 from beets import autotag
 from beets.autotag import Recommendation
 from beets.autotag import hooks
@@ -49,6 +50,7 @@ log = logging.getLogger('beets')
 # The list of default subcommands. This is populated with click command objects
 # which are later attached to a click group
 default_commands = []
+
 
 def default_command(name=None, **kwargs):
     rv = click.command(name, cls=ClickSubcommand, **kwargs)
@@ -119,7 +121,7 @@ default_commands.append(fields_cmd)
 # help: Print help text for commands
 
 @default_command('help',
-               short_help='give detailed help on a specific sub-command')
+                 short_help='give detailed help on a specific sub-command')
 @click.pass_context
 def help_cmd(ctx):
     if not ctx.args:
@@ -1178,7 +1180,7 @@ default_commands.append(remove_cmd)
 # stats: Show library/query statistics.
 
 @default_command('stats',
-               short_help='show statistics about the library or a query')
+                 short_help='show statistics about the library or a query')
 @click.option('-e', '--exact', is_flag=True, help='exact size and time')
 @click.argument('query', nargs=-1)
 @ui.pass_context
@@ -1641,4 +1643,4 @@ completion_cmd = ui.Subcommand(
 )
 completion_cmd.func = print_completion
 completion_cmd.hide = True
-#default_commands.append(completion_cmd)  # FIXME
+# default_commands.append(completion_cmd)  # FIXME
