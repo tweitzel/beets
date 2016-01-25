@@ -116,17 +116,13 @@ class DuplicatesPlugin(BeetsPlugin):
             delete = self.config['delete'].get(bool)
             fmt = self.config['format'].get(str)
             full = self.config['full'].get(bool)
-            keys = self.config['keys'].get(list)
+            keys = self.config['keys'].as_str_seq()
             merge = self.config['merge'].get(bool)
             move = self.config['move'].get(str)
             path = self.config['path'].get(bool)
             tiebreak = self.config['tiebreak'].get(dict)
             strict = self.config['strict'].get(bool)
             tag = self.config['tag'].get(str)
-
-            # Command-line override.
-            if opts.key:
-                keys = opts.key
 
             if album:
                 if not keys:
