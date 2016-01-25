@@ -1257,8 +1257,10 @@ class BeetsCommand(click.MultiCommand):
                 cmd = optparse2click.parser_to_click(
                     command.parser,
                     callback,
+                    cls=AliasedSubcommand,
                     name=command.name,
                     help=command.help,
+                    aliases=command.aliases,
                 )
 
             else:
