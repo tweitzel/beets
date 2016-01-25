@@ -873,7 +873,7 @@ def _open_library(config):
 # Click infrastructure for the root command, subcommands, and common
 # options.
 
-class AliasedSubcommand(click.Command):
+class Command(click.Command):
     """A `click.Command` with aliases (i.e., alternate spellings for the
     command's name.
 
@@ -1091,7 +1091,7 @@ class LegacySubcommand(object):
         command = optparse2click.parser_to_click(
             self.parser,
             callback,
-            cls=AliasedSubcommand,
+            cls=Command,
             name=self.name,
             help=self.help,
             aliases=self.aliases,
