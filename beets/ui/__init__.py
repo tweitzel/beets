@@ -1159,7 +1159,7 @@ def main():
     helper, `beet`.
     """
     try:
-        beet()
+        beet(standalone_mode=False)
     except UserError as exc:
         message = exc.args[0] if exc.args else None
         log.error(u'error: {0}', message)
@@ -1188,3 +1188,9 @@ def main():
     except KeyboardInterrupt:
         # Silently ignore ^C except in verbose mode.
         log.debug(u'{}', traceback.format_exc())
+    except click.ClickException as exc:
+        # Handle command-line parser errors.
+        exc.show()
+        sys.exit(exc.exit_code)
+    except click.Abort:
+        sys.exit(1)
