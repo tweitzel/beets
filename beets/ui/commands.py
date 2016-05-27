@@ -79,6 +79,14 @@ def _do_query(lib, query, album, also_items=True):
 
 # fields: Shows a list of available fields for queries and format strings.
 
+def _print_keys(query):
+    """Given a SQLite query result, print the `key` field of each
+    returned row, with identation of 2 spaces.
+    """
+    for row in query:
+        print_(' ' * 2 + row[b'key'])
+
+
 def fields_func(lib, opts, args):
     def _print_rows(names):
         names.sort()
