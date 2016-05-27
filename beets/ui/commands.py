@@ -103,7 +103,7 @@ def fields_func(lib, opts, args):
 
 fields_cmd = ui.Subcommand(
     'fields',
-    help='show fields available for queries and format strings'
+    help=u'show fields available for queries and format strings'
 )
 fields_cmd.func = fields_func
 default_commands.append(fields_cmd)
@@ -958,84 +958,84 @@ def import_func(lib, opts, args):
 
 
 import_cmd = ui.Subcommand(
-    'import', help='import new music', aliases=('imp', 'im')
+    u'import', help=u'import new music', aliases=(u'imp', u'im')
 )
 import_cmd.parser.add_option(
-    '-c', '--copy', action='store_true', default=None,
-    help="copy tracks into library directory (default)"
+    u'-c', u'--copy', action='store_true', default=None,
+    help=u"copy tracks into library directory (default)"
 )
 import_cmd.parser.add_option(
-    '-C', '--nocopy', action='store_false', dest='copy',
-    help="don't copy tracks (opposite of -c)"
+    u'-C', u'--nocopy', action='store_false', dest='copy',
+    help=u"don't copy tracks (opposite of -c)"
 )
 import_cmd.parser.add_option(
-    '-w', '--write', action='store_true', default=None,
-    help="write new metadata to files' tags (default)"
+    u'-w', u'--write', action='store_true', default=None,
+    help=u"write new metadata to files' tags (default)"
 )
 import_cmd.parser.add_option(
-    '-W', '--nowrite', action='store_false', dest='write',
-    help="don't write metadata (opposite of -w)"
+    u'-W', u'--nowrite', action='store_false', dest='write',
+    help=u"don't write metadata (opposite of -w)"
 )
 import_cmd.parser.add_option(
-    '-a', '--autotag', action='store_true', dest='autotag',
-    help="infer tags for imported files (default)"
+    u'-a', u'--autotag', action='store_true', dest='autotag',
+    help=u"infer tags for imported files (default)"
 )
 import_cmd.parser.add_option(
-    '-A', '--noautotag', action='store_false', dest='autotag',
-    help="don't infer tags for imported files (opposite of -a)"
+    u'-A', u'--noautotag', action='store_false', dest='autotag',
+    help=u"don't infer tags for imported files (opposite of -a)"
 )
 import_cmd.parser.add_option(
-    '-p', '--resume', action='store_true', default=None,
-    help="resume importing if interrupted"
+    u'-p', u'--resume', action='store_true', default=None,
+    help=u"resume importing if interrupted"
 )
 import_cmd.parser.add_option(
-    '-P', '--noresume', action='store_false', dest='resume',
-    help="do not try to resume importing"
+    u'-P', u'--noresume', action='store_false', dest='resume',
+    help=u"do not try to resume importing"
 )
 import_cmd.parser.add_option(
-    '-q', '--quiet', action='store_true', dest='quiet',
-    help="never prompt for input: skip albums instead"
+    u'-q', u'--quiet', action='store_true', dest='quiet',
+    help=u"never prompt for input: skip albums instead"
 )
 import_cmd.parser.add_option(
-    '-l', '--log', dest='log',
-    help='file to log untaggable albums for later review'
+    u'-l', u'--log', dest='log',
+    help=u'file to log untaggable albums for later review'
 )
 import_cmd.parser.add_option(
-    '-s', '--singletons', action='store_true',
-    help='import individual tracks instead of full albums'
+    u'-s', u'--singletons', action='store_true',
+    help=u'import individual tracks instead of full albums'
 )
 import_cmd.parser.add_option(
-    '-t', '--timid', dest='timid', action='store_true',
-    help='always confirm all actions'
+    u'-t', u'--timid', dest='timid', action='store_true',
+    help=u'always confirm all actions'
 )
 import_cmd.parser.add_option(
-    '-L', '--library', dest='library', action='store_true',
-    help='retag items matching a query'
+    u'-L', u'--library', dest='library', action='store_true',
+    help=u'retag items matching a query'
 )
 import_cmd.parser.add_option(
-    '-i', '--incremental', dest='incremental', action='store_true',
-    help='skip already-imported directories'
+    u'-i', u'--incremental', dest='incremental', action='store_true',
+    help=u'skip already-imported directories'
 )
 import_cmd.parser.add_option(
-    '-I', '--noincremental', dest='incremental', action='store_false',
-    help='do not skip already-imported directories'
+    u'-I', u'--noincremental', dest='incremental', action='store_false',
+    help=u'do not skip already-imported directories'
 )
 import_cmd.parser.add_option(
-    '--flat', dest='flat', action='store_true',
-    help='import an entire tree as a single album'
+    u'--flat', dest='flat', action='store_true',
+    help=u'import an entire tree as a single album'
 )
 import_cmd.parser.add_option(
-    '-g', '--group-albums', dest='group_albums', action='store_true',
-    help='group tracks in a folder into separate albums'
+    u'-g', u'--group-albums', dest='group_albums', action='store_true',
+    help=u'group tracks in a folder into separate albums'
 )
 import_cmd.parser.add_option(
-    '--pretend', dest='pretend', action='store_true',
-    help='just print the files to import'
+    u'--pretend', dest='pretend', action='store_true',
+    help=u'just print the files to import'
 )
 import_cmd.parser.add_option(
-    '-S', '--search-id', dest='search_ids', action='append',
+    u'-S', u'--search-id', dest='search_ids', action='append',
     metavar='BACKEND_ID',
-    help='restrict matching to a specific metadata backend ID'
+    help=u'restrict matching to a specific metadata backend ID'
 )
 import_cmd.func = import_func
 default_commands.append(import_cmd)
@@ -1059,9 +1059,9 @@ def list_func(lib, opts, args):
     list_items(lib, decargs(args), opts.album)
 
 
-list_cmd = ui.Subcommand('list', help='query the library', aliases=('ls',))
-list_cmd.parser.usage += "\n" \
-    'Example: %prog -f \'$album: $title\' artist:beatles'
+list_cmd = ui.Subcommand(u'list', help=u'query the library', aliases=(u'ls',))
+list_cmd.parser.usage += u"\n" \
+    u'Example: %prog -f \'$album: $title\' artist:beatles'
 list_cmd.parser.add_all_common_options()
 list_cmd.func = list_func
 default_commands.append(list_cmd)
@@ -1162,21 +1162,21 @@ def update_func(lib, opts, args):
 
 
 update_cmd = ui.Subcommand(
-    'update', help='update the library', aliases=('upd', 'up',)
+    u'update', help=u'update the library', aliases=(u'upd', u'up',)
 )
 update_cmd.parser.add_album_option()
 update_cmd.parser.add_format_option()
 update_cmd.parser.add_option(
-    '-m', '--move', action='store_true', dest='move',
-    help="move files in the library directory"
+    u'-m', u'--move', action='store_true', dest='move',
+    help=u"move files in the library directory"
 )
 update_cmd.parser.add_option(
-    '-M', '--nomove', action='store_false', dest='move',
-    help="don't move files in library"
+    u'-M', u'--nomove', action='store_false', dest='move',
+    help=u"don't move files in library"
 )
 update_cmd.parser.add_option(
-    '-p', '--pretend', action='store_true',
-    help="show all changes but do nothing"
+    u'-p', u'--pretend', action='store_true',
+    help=u"show all changes but do nothing"
 )
 update_cmd.func = update_func
 default_commands.append(update_cmd)
@@ -1221,11 +1221,11 @@ def remove_func(lib, opts, args):
 
 
 remove_cmd = ui.Subcommand(
-    'remove', help='remove matching items from the library', aliases=('rm',)
+    u'remove', help=u'remove matching items from the library', aliases=(u'rm',)
 )
 remove_cmd.parser.add_option(
-    "-d", "--delete", action="store_true",
-    help="also remove files from disk"
+    u"-d", u"--delete", action="store_true",
+    help=u"also remove files from disk"
 )
 remove_cmd.parser.add_album_option()
 remove_cmd.func = remove_func
@@ -1286,11 +1286,11 @@ def stats_func(lib, opts, args):
 
 
 stats_cmd = ui.Subcommand(
-    'stats', help='show statistics about the library or a query'
+    u'stats', help=u'show statistics about the library or a query'
 )
 stats_cmd.parser.add_option(
-    '-e', '--exact', action='store_true',
-    help='exact size and time'
+    u'-e', u'--exact', action='store_true',
+    help=u'exact size and time'
 )
 stats_cmd.func = stats_func
 default_commands.append(stats_cmd)
@@ -1299,7 +1299,7 @@ default_commands.append(stats_cmd)
 # version: Show current beets version.
 
 def show_version(lib, opts, args):
-    print_('beets version %s' % beets.__version__)
+    print_(u'beets version %s' % beets.__version__)
     # Show plugins.
     names = sorted(p.name for p in plugins.find_plugins())
     if names:
@@ -1309,7 +1309,7 @@ def show_version(lib, opts, args):
 
 
 version_cmd = ui.Subcommand(
-    'version', help='output version information'
+    u'version', help=u'output version information'
 )
 version_cmd.func = show_version
 default_commands.append(version_cmd)
@@ -1408,35 +1408,35 @@ def modify_parse_args(args):
 def modify_func(lib, opts, args):
     query, mods, dels = modify_parse_args(decargs(args))
     if not mods and not dels:
-        raise ui.UserError('no modifications specified')
+        raise ui.UserError(u'no modifications specified')
     modify_items(lib, mods, dels, query, ui.should_write(opts.write),
                  ui.should_move(opts.move), opts.album, not opts.yes)
 
 
 modify_cmd = ui.Subcommand(
-    'modify', help='change metadata fields', aliases=('mod',)
+    u'modify', help=u'change metadata fields', aliases=(u'mod',)
 )
 modify_cmd.parser.add_option(
-    '-m', '--move', action='store_true', dest='move',
-    help="move files in the library directory"
+    u'-m', u'--move', action='store_true', dest='move',
+    help=u"move files in the library directory"
 )
 modify_cmd.parser.add_option(
-    '-M', '--nomove', action='store_false', dest='move',
-    help="don't move files in library"
+    u'-M', u'--nomove', action='store_false', dest='move',
+    help=u"don't move files in library"
 )
 modify_cmd.parser.add_option(
-    '-w', '--write', action='store_true', default=None,
-    help="write new metadata to files' tags (default)"
+    u'-w', u'--write', action='store_true', default=None,
+    help=u"write new metadata to files' tags (default)"
 )
 modify_cmd.parser.add_option(
-    '-W', '--nowrite', action='store_false', dest='write',
-    help="don't write metadata (opposite of -w)"
+    u'-W', u'--nowrite', action='store_false', dest='write',
+    help=u"don't write metadata (opposite of -w)"
 )
 modify_cmd.parser.add_album_option()
 modify_cmd.parser.add_format_option(target='item')
 modify_cmd.parser.add_option(
-    '-y', '--yes', action='store_true',
-    help='skip confirmation'
+    u'-y', u'--yes', action='store_true',
+    help=u'skip confirmation'
 )
 modify_cmd.func = modify_func
 default_commands.append(modify_cmd)
@@ -1491,25 +1491,30 @@ def move_func(lib, opts, args):
     if dest is not None:
         dest = normpath(dest)
         if not os.path.isdir(dest):
-            raise ui.UserError('no such directory: %s' % dest)
+            raise ui.UserError(u'no such directory: %s' % dest)
 
     move_items(lib, dest, decargs(args), opts.copy, opts.album, opts.pretend)
 
 
 move_cmd = ui.Subcommand(
-    'move', help='move or copy items', aliases=('mv',)
+    u'move', help=u'move or copy items', aliases=(u'mv',)
 )
 move_cmd.parser.add_option(
-    '-d', '--dest', metavar='DIR', dest='dest',
-    help='destination directory'
+    u'-d', u'--dest', metavar='DIR', dest='dest',
+    help=u'destination directory'
 )
 move_cmd.parser.add_option(
-    '-c', '--copy', default=False, action='store_true',
-    help='copy instead of moving'
+    u'-c', u'--copy', default=False, action='store_true',
+    help=u'copy instead of moving'
 )
 move_cmd.parser.add_option(
-    '-p', '--pretend', default=False, action='store_true',
-    help='show how files would be moved, but don\'t touch anything')
+    u'-p', u'--pretend', default=False, action='store_true',
+    help=u'show how files would be moved, but don\'t touch anything'
+)
+move_cmd.parser.add_option(
+    u'-t', u'--timid', dest='timid', action='store_true',
+    help=u'always confirm all actions'
+)
 move_cmd.parser.add_album_option()
 move_cmd.func = move_func
 default_commands.append(move_cmd)
@@ -1550,14 +1555,14 @@ def write_func(lib, opts, args):
     write_items(lib, decargs(args), opts.pretend, opts.force)
 
 
-write_cmd = ui.Subcommand('write', help='write tag information to files')
+write_cmd = ui.Subcommand(u'write', help=u'write tag information to files')
 write_cmd.parser.add_option(
-    '-p', '--pretend', action='store_true',
-    help="show all changes but do nothing"
+    u'-p', u'--pretend', action='store_true',
+    help=u"show all changes but do nothing"
 )
 write_cmd.parser.add_option(
-    '-f', '--force', action='store_true',
-    help="write tags even if the existing tags match the database"
+    u'-f', u'--force', action='store_true',
+    help=u"write tags even if the existing tags match the database"
 )
 write_cmd.func = write_func
 default_commands.append(write_cmd)
@@ -1609,29 +1614,29 @@ def config_edit():
             open(path, 'w+').close()
         util.interactive_open([path], editor)
     except OSError as exc:
-        message = "Could not edit configuration: {0}".format(exc)
+        message = u"Could not edit configuration: {0}".format(exc)
         if not editor:
-            message += ". Please set the EDITOR environment variable"
+            message += u". Please set the EDITOR environment variable"
         raise ui.UserError(message)
 
-config_cmd = ui.Subcommand('config',
-                           help='show or edit the user configuration')
+config_cmd = ui.Subcommand(u'config',
+                           help=u'show or edit the user configuration')
 config_cmd.parser.add_option(
-    '-p', '--paths', action='store_true',
-    help='show files that configuration was loaded from'
+    u'-p', u'--paths', action='store_true',
+    help=u'show files that configuration was loaded from'
 )
 config_cmd.parser.add_option(
-    '-e', '--edit', action='store_true',
-    help='edit user configuration with $EDITOR'
+    u'-e', u'--edit', action='store_true',
+    help=u'edit user configuration with $EDITOR'
 )
 config_cmd.parser.add_option(
-    '-d', '--defaults', action='store_true',
-    help='include the default configuration'
+    u'-d', u'--defaults', action='store_true',
+    help=u'include the default configuration'
 )
 config_cmd.parser.add_option(
-    '-c', '--clear', action='store_false',
+    u'-c', u'--clear', action='store_false',
     dest='redact', default=True,
-    help='do not redact sensitive fields'
+    help=u'do not redact sensitive fields'
 )
 config_cmd.func = config_func
 default_commands.append(config_cmd)
