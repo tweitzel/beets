@@ -29,10 +29,11 @@ from beets import importer
 from beets import ui
 from beets import util
 from beets import config
-from beets.mediafile import image_mime_type
+from mediafile import image_mime_type
 from beets.util.artresizer import ArtResizer
-from beets.util import confit, sorted_walk
+from beets.util import sorted_walk
 from beets.util import syspath, bytestring_path, py3_path
+import confuse
 import six
 
 CONTENT_TYPES = {
@@ -310,7 +311,10 @@ class CoverArtArchive(RemoteArtSource):
 
 class Amazon(RemoteArtSource):
     NAME = u"Amazon"
-    URL = 'http://images.amazon.com/images/P/%s.%02i.LZZZZZZZ.jpg'
+    if util.SNI_SUPPORTED:
+        URL = 'https://images.amazon.com/images/P/%s.%02i.LZZZZZZZ.jpg'
+    else:
+        URL = 'http://images.amazon.com/images/P/%s.%02i.LZZZZZZZ.jpg'
     INDICES = (1, 2)
 
     def get(self, album, plugin, paths):
@@ -324,7 +328,10 @@ class Amazon(RemoteArtSource):
 
 class AlbumArtOrg(RemoteArtSource):
     NAME = u"AlbumArt.org scraper"
-    URL = 'http://www.albumart.org/index_detail.php'
+    if util.SNI_SUPPORTED:
+        URL = 'https://www.albumart.org/index_detail.php'
+    else:
+        URL = 'http://www.albumart.org/index_detail.php'
     PAT = r'href\s*=\s*"([^>"]*)"[^>]*title\s*=\s*"View larger image"'
 
     def get(self, album, plugin, paths):
@@ -776,9 +783,9 @@ class FetchArtPlugin(plugins.BeetsPlugin, RequestMixin):
 
         # allow both pixel and percentage-based margin specifications
         self.enforce_ratio = self.config['enforce_ratio'].get(
-            confit.OneOf([bool,
-                          confit.String(pattern=self.PAT_PX),
-                          confit.String(pattern=self.PAT_PERCENT)]))
+            confuse.OneOf([bool,
+                           confuse.String(pattern=self.PAT_PX),
+                           confuse.String(pattern=self.PAT_PERCENT)]))
         self.margin_px = None
         self.margin_percent = None
         if type(self.enforce_ratio) is six.text_type:
@@ -788,7 +795,7 @@ class FetchArtPlugin(plugins.BeetsPlugin, RequestMixin):
                 self.margin_px = int(self.enforce_ratio[:-2])
             else:
                 # shouldn't happen
-                raise confit.ConfigValueError()
+                raise confuse.ConfigValueError()
             self.enforce_ratio = True
 
         cover_names = self.config['cover_names'].as_str_seq()
