@@ -84,7 +84,8 @@ class AlbumInfo(object):
                  releasegroupdisambig=None, artist_credit=None,
                  original_year=None, original_month=None,
                  original_day=None, data_source=None, data_url=None,
-                 discogs_albumid=None):
+                 discogs_albumid=None, discogs_labelid=None,
+                 discogs_artistid=None):
         self.album = album
         self.album_id = album_id
         self.artist = artist
@@ -117,6 +118,8 @@ class AlbumInfo(object):
         self.data_source = data_source
         self.data_url = data_url
         self.discogs_albumid = discogs_albumid
+        self.discogs_labelid = discogs_labelid
+        self.discogs_artistid = discogs_artistid
 
     # Work around a bug in python-musicbrainz-ngs that causes some
     # strings to be bytes rather than Unicode.
@@ -129,7 +132,8 @@ class AlbumInfo(object):
                     'catalognum', 'script', 'language', 'country', 'style',
                     'genre', 'albumstatus', 'albumdisambig',
                     'releasegroupdisambig', 'artist_credit',
-                    'media', 'discogs_albumid']:
+                    'media', 'discogs_albumid', 'discogs_labelid',
+                    'discogs_artistid']:
             value = getattr(self, fld)
             if isinstance(value, bytes):
                 setattr(self, fld, value.decode(codec, 'ignore'))
@@ -180,7 +184,7 @@ class TrackInfo(object):
                  data_url=None, media=None, lyricist=None, composer=None,
                  composer_sort=None, arranger=None, track_alt=None,
                  work=None, mb_workid=None, work_disambig=None, bpm=None,
-                 musical_key=None, genre=None):
+                 initial_key=None, genre=None):
         self.title = title
         self.track_id = track_id
         self.release_track_id = release_track_id
@@ -206,7 +210,7 @@ class TrackInfo(object):
         self.mb_workid = mb_workid
         self.work_disambig = work_disambig
         self.bpm = bpm
-        self.musical_key = musical_key
+        self.initial_key = initial_key
         self.genre = genre
 
     # As above, work around a bug in python-musicbrainz-ngs.
@@ -610,17 +614,21 @@ def tracks_for_id(track_id):
 
 
 @plugins.notify_info_yielded(u'albuminfo_received')
-def album_candidates(items, artist, album, va_likely):
+def album_candidates(items, artist, album, va_likely, extra_tags):
     """Search for album matches. ``items`` is a list of Item objects
     that make up the album. ``artist`` and ``album`` are the respective
     names (strings), which may be derived from the item list or may be
     entered by the user. ``va_likely`` is a boolean indicating whether
-    the album is likely to be a "various artists" release.
+    the album is likely to be a "various artists" release. ``extra_tags``
+    is an optional dictionary of additional tags used to further
+    constrain the search.
     """
+
     # Base candidates if we have album and artist to match.
     if artist and album:
         try:
-            for candidate in mb.match_album(artist, album, len(items)):
+            for candidate in mb.match_album(artist, album, len(items),
+                                            extra_tags):
                 yield candidate
         except mb.MusicBrainzAPIError as exc:
             exc.log(log)
@@ -628,13 +636,15 @@ def album_candidates(items, artist, album, va_likely):
     # Also add VA matches from MusicBrainz where appropriate.
     if va_likely and album:
         try:
-            for candidate in mb.match_album(None, album, len(items)):
+            for candidate in mb.match_album(None, album, len(items),
+                                            extra_tags):
                 yield candidate
         except mb.MusicBrainzAPIError as exc:
             exc.log(log)
 
     # Candidates from plugins.
-    for candidate in plugins.candidates(items, artist, album, va_likely):
+    for candidate in plugins.candidates(items, artist, album, va_likely,
+                                        extra_tags):
         yield candidate
 
 
