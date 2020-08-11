@@ -210,6 +210,9 @@ class ArtSource(RequestMixin):
     def fetch_image(self, candidate, plugin):
         raise NotImplementedError()
 
+    def cleanup(self, candidate):
+        pass
+
 
 class LocalArtSource(ArtSource):
     IS_LOCAL = True
@@ -291,10 +294,18 @@ class RemoteArtSource(ArtSource):
             self._log.debug(u'error fetching art: {}', exc)
             return
 
+    def cleanup(self, candidate):
+        if candidate.path:
+            try:
+                util.remove(path=candidate.path)
+            except util.FilesystemError as exc:
+                self._log.debug(u'error cleaning up tmp art: {}', exc)
+
 
 class CoverArtArchive(RemoteArtSource):
     NAME = u"Cover Art Archive"
     VALID_MATCHING_CRITERIA = ['release', 'releasegroup']
+    VALID_THUMBNAIL_SIZES = [250, 500, 1200]
 
     if util.SNI_SUPPORTED:
         URL = 'https://coverartarchive.org/release/{mbid}/front'
@@ -307,13 +318,31 @@ class CoverArtArchive(RemoteArtSource):
         """Return the Cover Art Archive and Cover Art Archive release group URLs
         using album MusicBrainz release ID and release group ID.
         """
+        release_url = self.URL.format(mbid=album.mb_albumid)
+        release_group_url = self.GROUP_URL.format(mbid=album.mb_releasegroupid)
+
+        # Cover Art Archive API offers pre-resized thumbnails at several sizes.
+        # If the maxwidth config matches one of the already available sizes
+        # fetch it directly intead of fetching the full sized image and
+        # resizing it.
+        size_suffix = None
+        if plugin.maxwidth in self.VALID_THUMBNAIL_SIZES:
+            size_suffix = "-" + str(plugin.maxwidth)
+
         if 'release' in self.match_by and album.mb_albumid:
-            yield self._candidate(url=self.URL.format(mbid=album.mb_albumid),
+            if size_suffix:
+                release_thumbnail_url = release_url + size_suffix
+                yield self._candidate(url=release_thumbnail_url,
+                                      match=Candidate.MATCH_EXACT)
+            yield self._candidate(url=release_url,
                                   match=Candidate.MATCH_EXACT)
         if 'releasegroup' in self.match_by and album.mb_releasegroupid:
-            yield self._candidate(
-                url=self.GROUP_URL.format(mbid=album.mb_releasegroupid),
-                match=Candidate.MATCH_FALLBACK)
+            if size_suffix:
+                release_group_thumbnail_url = release_group_url + size_suffix
+                yield self._candidate(url=release_group_thumbnail_url,
+                                      match=Candidate.MATCH_FALLBACK)
+            yield self._candidate(url=release_group_url,
+                                  match=Candidate.MATCH_FALLBACK)
 
 
 class Amazon(RemoteArtSource):
@@ -1017,6 +1046,8 @@ class FetchArtPlugin(plugins.BeetsPlugin, RequestMixin):
                             u'using {0.LOC_STR} image {1}'.format(
                                 source, util.displayable_path(out.path)))
                         break
+                    # Remove temporary files for invalid candidates.
+                    source.cleanup(candidate)
                 if out:
                     break
 

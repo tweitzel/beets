@@ -6,6 +6,8 @@ Changelog
 
 New features:
 
+* :doc:`/plugins/lastgenre`: Added more heavy metal genres: https://en.wikipedia.org/wiki/Heavy_metal_genres to genres.txt and genres-tree.yaml
+* :doc:`/plugins/subsonicplaylist`: import playlist from a subsonic server.
 * A new :ref:`extra_tags` configuration option allows more tagged metadata
   to be included in MusicBrainz queries.
 * A new :doc:`/plugins/fish` adds `Fish shell`_ tab autocompletion to beets
@@ -115,12 +117,46 @@ New features:
   :bug:`3459`
 * :doc:`/plugins/fetchart`: Album art can now be fetched from `last.fm`_.
   :bug:`3530`
+* The classes ``AlbumInfo`` and ``TrackInfo`` now have flexible attributes,
+  allowing to solve :bug:`1547`. 
+  Thanks to :user:`dosoe`.
+* :doc:`/plugins/web`: The query API now interprets backslashes as path
+  separators to support path queries.
+  Thanks to :user:`nmeum`.
+  :bug:`3567`
+* ``beet import`` now handles tar archives with bzip2 or gzip compression.
+  :bug:`3606`
+* :doc:`/plugins/plexupdate`: Add option to use secure connection to Plex
+  server, and to ignore certificate validation errors if necessary.
+  :bug:`2871`
+* :doc:`/plugins/lyrics`: Improved searching Genius backend when artist
+  contained special characters.
+  :bug:`3634`
+* :doc:`/plugins/parentwork`: Also get the composition date of the parent work,
+  instead of just the child work.
+  Thanks to :user:`aereaux`.
+  :bug:`3650`
+* :doc:`/plugins/lyrics`: Fix a bug in the heuristic for detecting valid
+  lyrics in the Google source of the lyrics plugin
+  :bug:`2969`
+* :doc:`/plugins/thumbnails`: Fix a bug where pathlib expected a string instead
+  of bytes for a path.
+  :bug:`3360`
+* :doc:`/plugins/convert`: If ``delete_originals`` is enabled, then the source files will
+  be deleted after importing.
+  Thanks to :user:`logan-arens`.
+  :bug:`2947`
 
 Fixes:
 
-* :doc:`/plugins/fetchart`: Fixed a bug that caused fetchart to not take 
+* :doc:`/plugins/the`: Fixed incorrect regex for 'the' that matched any
+  3-letter combination of the letters t, h, e.
+  :bug:`3701`
+* :doc:`/plugins/fetchart`: Fixed a bug that caused fetchart to not take
   environment variables such as proxy servers into account when making requests
   :bug:`3450`
+* :doc:`/plugins/fetchart`: Temporary files for fetched album art that fail
+  validation are now removed
 * :doc:`/plugins/inline`: In function-style field definitions that refer to
   flexible attributes, values could stick around from one function invocation
   to the next. This meant that, when displaying a list of objects, later
@@ -191,6 +227,28 @@ Fixes:
   The log message has also been rewritten for to improve clarity.
   Thanks to :user:`autrimpo`.
   :bug:`3533`
+* :doc:`/plugins/lyrics`: Adapt the Genius backend to changes in markup to
+  reduce the scraping failure rate.
+  :bug:`3535` :bug:`3594`
+* :doc:`/plugins/lyrics`: Fix crash when writing ReST files for a query without
+  results or fetched lyrics
+  :bug:`2805`
+* Adapt to breaking changes in Python's ``ast`` module in 3.8
+* :doc:`/plugins/fetchart`: Attempt to fetch pre-resized thumbnails from Cover
+  Art Archive if the ``maxwidth`` option matches one of the sizes supported by
+  the Cover Art Archive API.
+  Thanks to :user:`trolley`.
+  :bug:`3637`
+* :doc:`/plugins/ipfs`: Fix Python 3 compatibility.
+  Thanks to :user:`musoke`.
+  :bug:`2554`
+* Fix a bug that caused metadata starting with something resembling a drive
+  letter to be incorrectly split into an extra directory after the colon.
+  :bug:`3685`
+* :doc:`/plugins/mpdstats`: Don't record a skip when stopping MPD, as MPD keeps
+  the current track in the queue.
+  Thanks to :user:`aereaux`.
+  :bug:`3722`
 
 For plugin developers:
 
